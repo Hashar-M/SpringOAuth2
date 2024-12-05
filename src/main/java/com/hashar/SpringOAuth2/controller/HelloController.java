@@ -1,5 +1,6 @@
 package com.hashar.SpringOAuth2.controller;
 
+import com.hashar.SpringOAuth2.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,16 @@ public class HelloController {
 
     @GetMapping("/user-info")
     public Map<String, Object> getUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
-            OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-            return oauth2User.getAttributes(); // This contains user info
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
+//            OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+//            return oauth2User.getAttributes(); // This contains user info
+//        }
+        OAuth2User oAuth2User = SecurityUtils.getCurrentUser();
+        if(oAuth2User != null){
+            return oAuth2User.getAttributes();
         }
-
         throw new RuntimeException("User not authenticated");
     }
 }
